@@ -1,0 +1,34 @@
+# Configuração do verificador de links (https://github.com/lycheeverse/lychee)
+# Uso: lychee --no-progress './**/*.md'
+#
+# Domínios que bloqueiam qualquer verificador automatizado (anti-bot / TLS
+# fingerprinting), mesmo com as páginas reais no ar e mesmo trocando a
+# User-Agent. Cada um foi verificado manualmente com HTTP 200 nesta sessão
+# (curl com User-Agent de navegador) antes de entrar aqui:
+# - linkedin.com: responde 999 a qualquer cliente automatizado.
+# - reddit.com: responde 403 ao lychee mesmo com User-Agent de navegador.
+# - facebook.com: responde 400 a um User-Agent completo de Chrome (o que este
+#   arquivo usa para destravar o microsoft.com) mas 200 a um User-Agent curto
+#   — verificado manualmente com curl (200) nesta sessão.
+# - juliobattisti.com.br: faz reset de conexão (TLS/anti-bot) especificamente
+#   para o cliente HTTP do lychee, mesmo com o mesmo User-Agent e mesmo com
+#   retries — porém responde 200 de forma consistente (5/5 tentativas) ao
+#   curl com User-Agent de navegador nesta sessão.
+exclude = [
+  "^https://www\\.linkedin\\.com/",
+  "^https://www\\.reddit\\.com/",
+  "^https://www\\.facebook\\.com/",
+  "^https://juliobattisti\\.com\\.br/",
+]
+
+# Alguns sites (ex.: microsoft.com) bloqueiam User-Agents curtos ou não
+# reconhecidos como navegador real (retornam 403), mesmo com a página no ar.
+# Um User-Agent completo de Chrome evita falsos positivos sem afrouxar a
+# verificação (ainda exige HTTP 200).
+user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+
+# Timeout e novas tentativas maiores para tolerar instabilidade pontual de
+# hosts pequenos.
+timeout = 30
+retry_wait_time = 3
+max_retries = 5
